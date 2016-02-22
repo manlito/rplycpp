@@ -3,7 +3,14 @@ add_definitions(-std=c++11)
 
 # Files used by tests
 set(DATA_PATH "${CMAKE_CURRENT_SOURCE_DIR}/data")
+
+if("${RPLYCPP_TEST_OUTPUT_PATH}" STREQUAL "")
+  set(RPLYCPP_TEST_OUTPUT_PATH ".")
+endif()
+
 add_definitions(
+  -DRPLYCPP_TEST_OUTPUT_SIMPLE_PLY="${RPLYCPP_TEST_OUTPUT_PATH}/simple_ply_out.ply"
+  -DRPLYCPP_TEST_OUTPUT_SURFACE_PLY="${RPLYCPP_TEST_OUTPUT_PATH}/surface_ply_out.ply"
   -DRPLYCPP_TEST_SIMPLE_PLY_XYZRGBNormal="${DATA_PATH}/simple_ply_xyz_rgb_normal.ply"
   -DRPLYCPP_TEST_SIMPLE_PLY_SURFACE="${DATA_PATH}/simple_ply_surface.ply"
 )

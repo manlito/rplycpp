@@ -9,7 +9,6 @@ TEST(PlyReader, ReadPointCloud) {
   PLYReader reader;
   bool read_status = reader.Open(RPLYCPP_TEST_SIMPLE_PLY_XYZRGBNormal);
   EXPECT_EQ(read_status, true) << "Could not open " << RPLYCPP_TEST_SIMPLE_PLY_XYZRGBNormal;
-
   EXPECT_EQ(reader.GetElements().size(), 1) << "Incorrect number of elements";
 }
 

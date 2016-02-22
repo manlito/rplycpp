@@ -83,6 +83,24 @@ bool PLYReader::Open(std::string filename)
                              this, 0)) return false;
         PLYProperty property;
         property.name = property_name;
+        switch (type) {
+          case PLY_INT8: property.type = PLYDataType::PLY_INT8; break;
+          case PLY_UINT8: property.type = PLYDataType::PLY_UINT8; break;
+          case PLY_INT16: property.type = PLYDataType::PLY_INT16; break;
+          case PLY_UINT16: property.type = PLYDataType::PLY_UINT16; break;
+          case PLY_INT32: property.type = PLYDataType::PLY_INT32; break;
+          case PLY_UIN32: property.type = PLYDataType::PLY_UINT32; break;
+          case PLY_FLOAT32: property.type = PLYDataType::PLY_FLOAT32; break;
+          case PLY_FLOAT64: property.type = PLYDataType::PLY_FLOAT64; break;
+          case PLY_CHAR: property.type = PLYDataType::PLY_CHAR; break;
+          case PLY_UCHAR: property.type = PLYDataType::PLY_UCHAR; break;
+          case PLY_SHORT: property.type = PLYDataType::PLY_SHORT; break;
+          case PLY_USHORT: property.type = PLYDataType::PLY_USHORT; break;
+          case PLY_INT: property.type = PLYDataType::PLY_INT; break;
+          case PLY_UINT: property.type = PLYDataType::PLY_UINT; break;
+          case PLY_DOUBLE: property.type = PLYDataType::PLY_DOUBLE; break;
+          case PLY_LIST: property.type = PLYDataType::PLY_LIST; break;
+        }
         ply_element.AddProperty(property);
     }
     elements_.push_back(ply_element);

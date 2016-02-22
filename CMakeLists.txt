@@ -4,6 +4,7 @@ add_definitions(-std=c++11)
 
 # Options
 option(RPLYCPP_BUILD_TESTS "Build tests (requires GTest)" ON)
+set(RPLYCPP_TEST_OUTPUT_PATH "" CACHE STRING "Folder where to put results from write tests")
 
 # Default build type: Release
 if (NOT CMAKE_BUILD_TYPE AND NOT MSVC)

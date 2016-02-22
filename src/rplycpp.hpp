@@ -10,11 +10,29 @@
 namespace rplycpp {
 
 // Signature of the handler. Note all values are double, since that is how
-// we get them from the
+// we get them from RPLy library
 typedef std::function<void (const std::vector<double>&)> PLYReadHandler;
+
+enum class PLYDataType {
+  PLY_INT8, PLY_UINT8, PLY_INT16, PLY_UINT16,
+  PLY_INT32, PLY_UINT32, PLY_FLOAT32, PLY_FLOAT64,
+  PLY_CHAR, PLY_UCHAR, PLY_SHORT, PLY_USHORT,
+  PLY_INT, PLY_UINT, PLY_FLOAT, PLY_DOUBLE,
+  PLY_LIST
+};
 
 struct PLYProperty {
   std::string name;
+  PLYDataType type;
+  // Values used only for list writing
+  PLYDataType list_length_type;
+  PLYDataType list_value_type;
+  size_t list_length;
+  PLYProperty() :
+    name("UNKNOWN"),
+    type(PLYDataType::PLY_FLOAT),
+    list_length_type(PLYDataType::PLY_UCHAR),
+    list_value_type(PLYDataType::PLY_INT) {}
 };
 
 class PLYElement {
@@ -72,6 +90,28 @@ protected:
   std::vector<PLYReadHandler> handlers_;
 };
 
+enum class PLYStorageMode {
+  PLY_BIG_ENDIAN, PLY_LITTLE_ENDIAN, PLY_ASCII, PLY_DEFAULT
+};
+
+class PLYWriter {
+public:
+  PLYWriter() : header_written_(false) {}
+  bool Open(std::string filename,
+            PLYStorageMode storage_mode = PLYStorageMode::PLY_ASCII);
+
+  bool AddElement(std::string name,
+                  const std::vector<PLYProperty> &properties,
+                  size_t total_rows);
+  bool AddRow(const std::vector<double> &values);
+  bool Close();
+
+protected:
+  bool WriteHeader();
+  // Original rply object used for writing
+  void *ply_file_;
+  bool header_written_;
+};
 }
 
 #endif // RPLYCPP_HPP
