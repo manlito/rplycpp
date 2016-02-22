@@ -22,7 +22,7 @@ This wrapper won't change too much. So, I recommend to embed it as a 3rd party. 
 Reading a PLY files can be done as follows:
 
 ```c++
-// Some randome data type from your app logic
+// Surface would be a class you made
 Surface<PointXYZRGB> cloud;
 
 rplycpp::PLYReader reader;
