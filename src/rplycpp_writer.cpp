@@ -1,6 +1,5 @@
 #include "rplycpp.hpp"
 #include "rply.h"
-#include <iostream>
 
 namespace rplycpp {
   e_ply_type FromRPLYCPPToEply(rplycpp::PLYDataType type) {
@@ -48,6 +47,9 @@ bool PLYWriter::Open(std::string filename, PLYStorageMode storage_mode)
 
   // Check if it could be opened
   if (!ply_file_) return false;
+
+  // Flag used to tell if we can call Close method
+  file_open_ = true;
 
   return true;
 }
@@ -101,8 +103,10 @@ bool PLYWriter::AddRow(const std::vector<double> &values)
 
 bool PLYWriter::Close()
 {
-  if (!WriteHeader()) return false;
-  if (!ply_close(static_cast<p_ply>(ply_file_))) return false;
-
+  if (file_open_) {
+    if (!WriteHeader()) return false;
+    if (!ply_close(static_cast<p_ply>(ply_file_))) return false;
+    file_open_ = false;
+  }
   return true;
 }

@@ -4,6 +4,7 @@ add_definitions(-std=c++11)
 
 # Options
 option(RPLYCPP_BUILD_TESTS "Build tests (requires GTest)" ON)
+option(RPLYCPP_BUILD_SAMPLES "Build samples" ON)
 set(RPLYCPP_TEST_OUTPUT_PATH "" CACHE STRING "Folder where to put results from write tests")
 
 # Default build type: Release
@@ -35,3 +36,7 @@ if(RPLYCPP_BUILD_TESTS)
 	endif()
 endif()
 
+if(RPLYCPP_BUILD_SAMPLES)
+  message(STATUS "Including Samples")
+  add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/samples")
+endif()

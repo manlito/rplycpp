@@ -66,7 +66,7 @@ protected:
 
 class PLYReader {
 public:
-  PLYReader() : current_element_(0) {}
+  PLYReader() : current_element_(0), file_open_(false) {}
   bool Open(std::string filename);
   bool Read(std::vector<std::function<void (const std::vector<double>&)>> handlers);
 
@@ -79,10 +79,13 @@ public:
 
   // Current value index accesor
   void IncrementElement() { ++current_element_; }
+  bool Close();
+  ~PLYReader() { Close(); }
 
 protected:
   // Original rply object used for reading
   void *ply_file_;
+  bool file_open_;
   std::vector<PLYElement> elements_;
   // Keep track of the current element
   size_t current_element_;
@@ -96,7 +99,7 @@ enum class PLYStorageMode {
 
 class PLYWriter {
 public:
-  PLYWriter() : header_written_(false) {}
+  PLYWriter() : header_written_(false), file_open_(false) {}
   bool Open(std::string filename,
             PLYStorageMode storage_mode = PLYStorageMode::PLY_ASCII);
 
@@ -105,12 +108,13 @@ public:
                   size_t total_rows);
   bool AddRow(const std::vector<double> &values);
   bool Close();
-
+  ~PLYWriter() { Close(); }
 protected:
   bool WriteHeader();
   // Original rply object used for writing
   void *ply_file_;
   bool header_written_;
+  bool file_open_;
 };
 }
 

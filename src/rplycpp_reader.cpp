@@ -1,6 +1,5 @@
 #include "rplycpp.hpp"
 #include "rply.h"
-#include <iostream>
 
 using namespace rplycpp;
 
@@ -56,6 +55,9 @@ bool PLYReader::Open(std::string filename)
   // Check if it could be opened
   if (!ply_file_) return false;
 
+  // Flag used to tell if we can call Close method
+  file_open_ = true;
+
   // Parse header
   if (!ply_read_header(static_cast<p_ply>(ply_file_))) return false;
 
@@ -98,6 +100,7 @@ bool PLYReader::Open(std::string filename)
           case PLY_USHORT: property.type = PLYDataType::PLY_USHORT; break;
           case PLY_INT: property.type = PLYDataType::PLY_INT; break;
           case PLY_UINT: property.type = PLYDataType::PLY_UINT; break;
+          case PLY_FLOAT: property.type = PLYDataType::PLY_FLOAT; break;
           case PLY_DOUBLE: property.type = PLYDataType::PLY_DOUBLE; break;
           case PLY_LIST: property.type = PLYDataType::PLY_LIST; break;
         }
@@ -112,6 +115,16 @@ bool PLYReader::Read(std::vector<std::function<void (const std::vector<double>&)
 {
   handlers_ = handlers;
   if (!ply_read(static_cast<p_ply>(ply_file_))) return false;
+
+  return true;
+}
+
+bool PLYReader::Close()
+{
+  if (file_open_) {
+    if (!ply_close(static_cast<p_ply>(ply_file_))) return false;
+    file_open_ = false;
+  }
 
   return true;
 }
