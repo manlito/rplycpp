@@ -51,7 +51,9 @@ int main(int argc, char *argv[])
   for (const auto &point : cloud.points) {
     writer.AddRow(std::vector<double> {
                     point.x, point.y, point.z,
-                    point.red, point.green, point.blue
+                    static_cast<double>(point.red),
+                    static_cast<double>(point.green),
+                    static_cast<double>(point.blue)
                   });
   }
 

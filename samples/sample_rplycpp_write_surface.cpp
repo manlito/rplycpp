@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
   cloud.faces.push_back(face);
 
   rplycpp::PLYWriter writer;
-  writer.Open(RPLYCPP_SAMPLE_OUTPUT_SURFACE_PLY, rplycpp::PLYStorageMode::PLY_BIG_ENDIAN);
+  writer.Open(RPLYCPP_SAMPLE_OUTPUT_SURFACE_PLY, rplycpp::PLYStorageMode::PLY_DEFAULT);
 
   // Create header
 
@@ -58,7 +58,12 @@ int main(int argc, char *argv[])
     writer.AddRow(std::vector<double> {point.x, point.y, point.z});
   }
   for (const auto &face : cloud.faces) {
-    writer.AddRow(std::vector<double> {3, face[0], face[1], face[2]});
+    writer.AddRow(std::vector<double> {
+                    3,
+                    static_cast<double>(face[0]),
+                    static_cast<double>(face[1]),
+                    static_cast<double>(face[2])
+                  });
   }
 
   // Close the file
