@@ -32,7 +32,7 @@ if(RPLYCPP_BUILD_TESTS)
 		message(STATUS "GTestLibraries: ${GTEST_LIBRARIES}")
 		add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests")
 	else()
-		message(FATAL_ERROR "GTest could not be found")
+    message(STATUS "GTest could not be found")
 	endif()
 endif()
 
