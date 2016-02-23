@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
 project(rplycpp)
-add_definitions(-std=c++11)
 
 # Options
 option(RPLYCPP_BUILD_TESTS "Build tests (requires GTest)" ON)
@@ -13,15 +12,16 @@ if (NOT CMAKE_BUILD_TYPE AND NOT MSVC)
 endif ()
 
 # Original RPLy library (http://w3.impa.br/~diego/software/rply/)
+add_subdirectory(third_party/rply)
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third_party/rply-1.1.4")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third_party/rply")
 
 # Build project
 aux_source_directory("${CMAKE_CURRENT_SOURCE_DIR}/src" RPLYCPP_SOURCES_LIST)
-aux_source_directory("${CMAKE_CURRENT_SOURCE_DIR}/third_party/rply-1.1.4" RPLY_SOURCES_LIST)
 add_library(rplycpp ${RPLYCPP_SOURCES_LIST} ${RPLY_SOURCES_LIST})
-set(RPLYCPP_LIBS rplycpp)
+add_definitions(-std=c++11)
+set(RPLYCPP_LIBS rplycpp rply)
 
 # When tests are enabled, GTest must be installed
 if(RPLYCPP_BUILD_TESTS)
