@@ -119,6 +119,10 @@ writer.Close();
 
 See other samples the samples folder
 
+### Tests
+
+If you have installed GTest, then tests should be compiled by default. You can use `make test` to run them.
+
 ## TODO
 
 - More tests and samples
