@@ -12,6 +12,7 @@ namespace rplycpp {
 // Signature of the handler. Note all values are double, since that is how
 // we get them from RPLy library
 typedef std::function<void (const std::vector<double>&)> PLYReadHandler;
+const PLYReadHandler DEFAULT_HANDLER = [](const std::vector<double> &vertex) {};
 
 enum class PLYDataType {
   PLY_INT8, PLY_UINT8, PLY_INT16, PLY_UINT16,
@@ -40,6 +41,8 @@ public:
   PLYElement() : current_index_(0) {}
 
   // Properties
+  void SetName(std::string name) { name_ = name; }
+  std::string GetName() const { return name_; }
   void AddProperty(PLYProperty property)  { properties_.push_back(property); }
   const std::vector<PLYProperty>& GetProperties() const { return properties_; }
 
@@ -49,16 +52,17 @@ public:
 
   // Current value index accesor
   void IncrementIndex() { ++current_index_; }
-  size_t GetCurrentIndex() { return current_index_; }
+  size_t GetCurrentIndex() const { return current_index_; }
 
   // Add a value to the current row. Are public because they're used in callback
   void AddValue(double value) { row_values_.push_back(value); }
-  std::vector<double> GetValues() { return row_values_; }
+  std::vector<double> GetValues() const { return row_values_; }
   void ClearValues() { row_values_.clear(); }
 
 protected:
   size_t current_index_;
   size_t total_instances_;
+  std::string name_;
   std::vector<PLYProperty> properties_;
   // Keep track of the current element property read
   std::vector<double> row_values_;
@@ -74,8 +78,12 @@ public:
   { return elements_; }
   PLYElement& GetCurrentElement()
   { return elements_[current_element_]; }
-  PLYReadHandler& GetCurrentHandler()
-  { return handlers_[current_element_]; }
+  PLYReadHandler GetCurrentHandler()
+  {
+    if (current_element_ < handlers_.size())
+      return handlers_[current_element_];
+    return DEFAULT_HANDLER;
+  }
 
   // Current value index accesor
   void IncrementElement() { ++current_element_; }

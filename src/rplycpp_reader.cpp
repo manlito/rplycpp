@@ -71,6 +71,7 @@ bool PLYReader::Open(std::string filename)
     long ninstances = 0;
     ply_get_element_info(element, &element_name, &ninstances);
     ply_element.SetTotalInstances(ninstances);
+    ply_element.SetName(element_name);
 
     // iterate over all properties of current element
     p_ply_property property = NULL;
