@@ -119,6 +119,39 @@ writer.Close();
 
 See other samples the samples folder
 
+#### Data validation
+
+If you're interacting with files you don't produce, check [this sample](samples/sample_rplycpp_read_unordered.cpp) to have an idea on how you could validate the existence of properties, and be unaffected by the order in which they appear. Here is a portion of that:
+
+```c++
+// Assume you have previously declared PlyReader reader, and opened the file
+  for (const rplycpp::PLYElement element: reader.GetElements()) {
+    std::string element_name = element.GetName();
+    std::cout << "Property: " << element_name << std::endl;
+    if (element_name == "vertex") {
+      // Some validation
+      std::vector<std::string> required_properties {"x", "y", "z"};
+      std::vector<std::string> property_names;
+      for (const auto &property : element.GetProperties()) {
+        property_names.push_back(property.name);
+      }
+      for (const auto &required_property : required_properties) {
+        if (std::find(property_names.begin(), property_names.end(), required_property) == property_names.end()) {
+          std::cerr << "Missing property " << required_property << " in " << element_name << std::endl;
+          reader.Close();
+          return EXIT_FAILURE;
+        }
+      }
+      // Populate map from property name to index
+      for (size_t i = 0; i < element.GetProperties().size(); ++i) {
+        const auto &property = element.GetProperties()[i];
+        property_to_index[property.name] = i;
+      }
+      handlers.push_back(vertices_handler);
+    } else if (element_name == "face") {
+```
+The main takeaway is that you should push handlers in the same order as you read them from `GetElements()`, and also, in this example, `property_to_index` is a map that is available in handlers to map the index in which data appears, to our property names.
+
 ### Tests
 
 If you have installed GTest, then tests should be compiled by default. You can use `make test` to run them.
