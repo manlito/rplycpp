@@ -156,6 +156,13 @@ The main takeaway is that you should push handlers in the same order as you read
 
 If you have installed GTest, then tests should be compiled by default. You can use `make test` to run them.
 
+## Changelog
+
+### 1.1
+
+- Update to CMake 3.5. This should silent warnings in CMake 3+ projects. You should now link using RPLYCPP::RPLYCPP.
+- Simplified to have only 1 target for the main library
+
 ## TODO
 
 - More tests and samples
