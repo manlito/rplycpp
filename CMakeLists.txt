@@ -53,3 +53,26 @@ if(RPLYCPP_BUILD_SAMPLES)
   message(STATUS "Including Samples")
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/samples")
 endif()
+
+install(
+	TARGETS
+		rplycpp
+	EXPORT
+		PointcloudRasterTargets
+	LIBRARY DESTINATION
+		${CMAKE_INSTALL_LIBDIR}
+	ARCHIVE DESTINATION
+		${CMAKE_INSTALL_LIBDIR}
+)
+
+export(
+	TARGETS
+		rplycpp
+	NAMESPACE
+		RPLYCPP::
+	FILE
+		${CMAKE_CURRENT_BINARY_DIR}/RPLYCPPTargets.cmake
+)
+
+set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
+export(PACKAGE rplycpp)
