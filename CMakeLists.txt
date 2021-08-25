@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.6)
-project(rplycpp)
+cmake_minimum_required(VERSION 3.5)
+project(rplycpp VERSION 1.1.0)
 
 # Options
 option(RPLYCPP_BUILD_TESTS "Build tests (requires GTest)" ON)
@@ -11,17 +11,30 @@ if (NOT CMAKE_BUILD_TYPE AND NOT MSVC)
   set(CMAKE_BUILD_TYPE "Release")
 endif ()
 
-# Original RPLy library (http://w3.impa.br/~diego/software/rply/)
-add_subdirectory(third_party/rply)
+add_library(rplycpp)
+target_include_directories(rplycpp
+	PUBLIC
+		$<INSTALL_INTERFACE:./src>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+		$<INSTALL_INTERFACE:./third_party/rply>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third_party/rply>
+)
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third_party/rply")
+target_sources(rplycpp
+	PRIVATE
+		${CMAKE_CURRENT_SOURCE_DIR}/third_party/rply/rply.h
+		${CMAKE_CURRENT_SOURCE_DIR}/third_party/rply/rply.c
+		${CMAKE_CURRENT_SOURCE_DIR}/src/rplycpp.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/rplycpp_reader.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/rplycpp_writer.cpp
+)
 
-# Build project
-aux_source_directory("${CMAKE_CURRENT_SOURCE_DIR}/src" RPLYCPP_SOURCES_LIST)
-add_library(rplycpp ${RPLYCPP_SOURCES_LIST} ${RPLY_SOURCES_LIST})
-add_definitions(-std=c++11)
-set(RPLYCPP_LIBS rplycpp rply)
+target_compile_features(rplycpp
+	PUBLIC
+		cxx_std_17
+)
+
+add_library(RPLYCPP::RPLYCPP ALIAS rplycpp)
 
 # When tests are enabled, GTest must be installed
 if(RPLYCPP_BUILD_TESTS)
@@ -32,7 +45,7 @@ if(RPLYCPP_BUILD_TESTS)
 		message(STATUS "GTestLibraries: ${GTEST_LIBRARIES}")
 		add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests")
 	else()
-    message(STATUS "GTest could not be found")
+	    message(STATUS "GTest could not be found")
 	endif()
 endif()
 

@@ -1,7 +1,5 @@
+cmake_minimum_required(VERSION 3.5)
 project(rplycpp_samples)
-
-# C++11 is required
-add_definitions(-std=c++11)
 
 # Setup our file paths. You won't need it
 set(DATA_PATH "${CMAKE_SOURCE_DIR}/tests/data")
@@ -29,5 +27,5 @@ foreach(SAMPLE_SOURCE_FILE ${RPLYCPP_SAMPLE_SOURCES})
 	# Remove the extension
 	string(REPLACE ".cpp" "" SAMPLE_NAME ${SAMPLE_SOURCE_FILENAME})
 	add_executable(${SAMPLE_NAME} ${SAMPLE_SOURCE_FILE})
-	target_link_libraries(${SAMPLE_NAME} ${RPLYCPP_LIBS} )
+	target_link_libraries(${SAMPLE_NAME} RPLYCPP::RPLYCPP )
 endforeach()

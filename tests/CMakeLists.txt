@@ -1,5 +1,5 @@
+cmake_minimum_required(VERSION 3.5)
 project(rplycpp_tests)
-add_definitions(-std=c++11)
 
 # Files used by tests
 set(DATA_PATH "${CMAKE_CURRENT_SOURCE_DIR}/data")
@@ -25,7 +25,7 @@ foreach(TEST_SOURCE_FILE ${RPLYCPP_TEST_SOURCES})
 	# Remove the extension
 	string(REPLACE ".cpp" "" TEST_NAME ${TEST_SOURCE_FILENAME})
 	add_executable(${TEST_NAME} ${TEST_SOURCE_FILE})
-  target_link_libraries(${TEST_NAME} ${RPLYCPP_LIBS} ${GTEST_BOTH_LIBRARIES})
+	target_link_libraries(${TEST_NAME} RPLYCPP::RPLYCPP ${GTEST_BOTH_LIBRARIES})
 	# Add to GTest
 	GTEST_ADD_TESTS(${TEST_NAME} "${TEST_ARGS}" AUTO)
 endforeach()
